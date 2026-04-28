@@ -38,8 +38,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-10">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2">
+    <div className="relative min-h-screen overflow-hidden px-4 py-10">
+      {/* match the app layout vibe */}
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-25" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1000px_600px_at_20%_10%,rgba(59,130,246,.22),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(168,85,247,.16),transparent_55%)]" />
+
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2">
         {/* Left: marketing/hero */}
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
@@ -69,7 +73,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right: form */}
-        <div className="card w-full max-w-md justify-self-end p-6">
+    <div className="card w-full max-w-md justify-self-end border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
           <div className="mb-5">
             <div className="text-sm font-semibold text-slate-200">Sign in</div>
             <p className="subtitle">
@@ -80,7 +84,7 @@ export default function LoginPage() {
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-slate-200">Email</label>
+      <label className="text-sm font-medium text-slate-200">Email:</label>
               <input
                 className="input mt-1"
                 value={email}
@@ -93,7 +97,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-slate-200">Password</label>
+              <label className="text-sm font-medium text-slate-200">Password:</label>
               <input
                 className="input mt-1"
                 value={password}

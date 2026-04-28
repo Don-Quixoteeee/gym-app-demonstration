@@ -1,0 +1,109 @@
+// prisma/schema.prisma
+// Minimal schema to support the current UI sections (auth, members, workouts, analytics).
+// Prisma ORM v7: datasource URL is configured in `prisma.config.ts`.
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MemberStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Member {
+  id        String       @id @default(cuid())
+  email     String?      @unique
+  fullName  String
+  status    MemberStatus @default(ACTIVE)
+  joinedAt  DateTime     @default(now())
+
+  workouts  Workout[]
+  visits    Visit[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([joinedAt])
+}
+
+model Workout {
+  id        String   @id @default(cuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  title     String?
+  notes     String?
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  exercises Exercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId, startedAt])
+}
+
+model Exercise {
+  id        String   @id @default(cuid())
+  workoutId String
+  workout   Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  name      String
+  sortOrder Int      @default(0)
+
+  sets      ExerciseSet[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workoutId, sortOrder])
+}
+
+model ExerciseSet {
+  id          String   @id @default(cuid())
+  exerciseId  String
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  setNumber   Int
+  reps        Int?
+  weightLbs   Float?
+  durationSec Int?
+  rpe         Float?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([exerciseId, setNumber])
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // A gym check-in; can power retention analytics later
+  visitedAt DateTime @default(now())
+  source    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([memberId, visitedAt])
+  @@index([visitedAt])
+}

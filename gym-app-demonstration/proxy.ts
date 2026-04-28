@@ -1,9 +1,8 @@
-// filepath: c:\Users\Launchpad2\Downloads\gym-app-demonstration\gym-app-demonstration\middleware.ts
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Allow public routes
@@ -27,6 +26,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Run middleware on all paths except for static assets and internal Next.js paths
+  // Run proxy on all paths except for static assets and internal Next.js paths
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -4,5 +4,6 @@ import { clearSessionCookie } from "@/lib/auth";
 
 export async function POST() {
   await clearSessionCookie();
-  return NextResponse.json({ ok: true });
+  const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000");
+  return NextResponse.redirect(url, { status: 303 });
 }
