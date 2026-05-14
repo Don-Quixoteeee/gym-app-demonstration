@@ -10,12 +10,26 @@ const root = __dirname;
 dotenv.config({ path: path.join(root, ".env") });
 dotenv.config({ path: path.join(root, ".env.local"), override: true });
 
-const databaseUrl = process.env.DATABASE_URL;
+let databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   throw new Error(
     "DATABASE_URL is missing. Add it to .env (or .env.local) in the project root."
   );
 }
+
+// Security: modern pg-connection-string treats 'require'/'prefer' as aliases for
+// 'verify-full' and will warn. To avoid the warning and be explicit about
+// security guarantees, append sslmode=verify-full in production when the
+// connection string doesn't already specify sslmode or uselibpqcompat.
+function ensureSslMode(url: string) {
+  if (/\b(sslmode|uselibpqcompat)=/i.test(url)) return url;
+  if (process.env.NODE_ENV === "production") {
+    return url + (url.includes("?") ? "&" : "?") + "sslmode=verify-full";
+  }
+  return url;
+}
+
+databaseUrl = ensureSslMode(databaseUrl);
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

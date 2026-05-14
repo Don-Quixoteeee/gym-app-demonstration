@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TopbarActions from "./components/TopbarActions";
 import { BarChart3, Dumbbell, LayoutDashboard, Sparkles } from "lucide-react";
 
 const nav = [
@@ -9,6 +10,7 @@ const nav = [
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  // client-rendered actions moved to TopbarActions
   return (
     <div className="min-h-screen bg-slate-950">
       {/* background texture */}
@@ -79,9 +81,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <button className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 hover:bg-white/10">
                   Export
                 </button>
-                <button className="rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-[0_18px_50px_rgba(37,99,235,.28)] hover:bg-blue-500">
-                  New workout
-                </button>
+                <TopbarActions />
               </div>
             </div>
           </header>

@@ -27,7 +27,8 @@ describe("/api/workouts", () => {
 
   it("POST creates a workout", async () => {
     const { POST } = await import("../route");
-    const res = await POST();
+    const req = new Request("/api/workouts", { method: "POST", body: undefined });
+    const res = await POST(req);
     expect(res.status).toBe(201);
     const body = await res.json();
     expect(body.workout.id).toBe("w1");

@@ -12,7 +12,14 @@ function createPgPool() {
     throw new Error("DATABASE_URL is missing. Add it to .env or .env.local.");
   }
 
-  return new Pool({ connectionString });
+  // If the connection string doesn't include sslmode or uselibpqcompat,
+  // append a secure sslmode in production to avoid runtime warnings and be explicit.
+  let conn = connectionString;
+  if (!/\b(sslmode|uselibpqcompat)=/i.test(conn) && process.env.NODE_ENV === "production") {
+    conn = conn + (conn.includes("?") ? "&" : "?") + "sslmode=verify-full";
+  }
+
+  return new Pool({ connectionString: conn });
 }
 
 const globalForPg = globalThis as unknown as { pgPool?: Pool };

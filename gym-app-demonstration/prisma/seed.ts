@@ -10,9 +10,13 @@ const root = path.resolve(__dirname, "..");
 dotenv.config({ path: path.join(root, ".env") });
 dotenv.config({ path: path.join(root, ".env.local"), override: true });
 
-const databaseUrl = process.env.DATABASE_URL;
+let databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   throw new Error("DATABASE_URL is missing. Add it to .env or .env.local.");
+}
+
+if (!/\b(sslmode|uselibpqcompat)=/i.test(databaseUrl) && process.env.NODE_ENV === "production") {
+  databaseUrl = databaseUrl + (databaseUrl.includes("?") ? "&" : "?") + "sslmode=verify-full";
 }
 
 const pool = new Pool({ connectionString: databaseUrl });
