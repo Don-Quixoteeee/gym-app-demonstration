@@ -1,3 +1,5 @@
+
+
 import { Suspense } from "react";
 import WorkoutClient from "./WorkoutClient";
 
