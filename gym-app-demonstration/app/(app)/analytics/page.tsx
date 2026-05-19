@@ -27,7 +27,7 @@ export default async function AnalyticsPage() {
 
   // Metric B: average exercises per workout (last 30 days)
   const totalWorkouts = recent.length;
-  const totalExercises = recent.reduce((sum, r) => sum + (r.exercises?.length ?? 0), 0);
+  const totalExercises = recent.reduce((sum: number, r) => sum + (r.exercises?.length ?? 0), 0);
   const avgExercises = totalWorkouts ? totalExercises / totalWorkouts : 0;
 
   return (
