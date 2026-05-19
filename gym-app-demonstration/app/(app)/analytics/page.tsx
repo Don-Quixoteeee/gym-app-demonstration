@@ -1,11 +1,13 @@
 import { prisma } from "@/lib/db";
-import type { Workout, Exercise } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 function formatNumber(n: number) {
   return n.toLocaleString?.() ?? String(n);
 }
 
-type WorkoutWithExercises = Workout & { exercises: Exercise[] };
+type WorkoutWithExercises = Prisma.WorkoutGetPayload<{
+  include: { exercises: true };
+}>;
 
 export default async function AnalyticsPage() {
   const now = new Date();
