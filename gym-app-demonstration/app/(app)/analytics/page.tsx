@@ -1,13 +1,8 @@
 import { prisma } from "@/lib/db";
-import type { Prisma } from "@prisma/client";
 
 function formatNumber(n: number) {
   return n.toLocaleString?.() ?? String(n);
 }
-
-type WorkoutWithExercises = Prisma.WorkoutGetPayload<{
-  include: { exercises: true };
-}>;
 
 export default async function AnalyticsPage() {
   const now = new Date();
@@ -15,7 +10,7 @@ export default async function AnalyticsPage() {
   last30.setDate(now.getDate() - 30);
 
   // Load workouts from the last 30 days and include exercises for metric calculations.
-  const recent: WorkoutWithExercises[] = await prisma.workout.findMany({
+  const recent = await prisma.workout.findMany({
     where: { startedAt: { gte: last30 } },
     include: { exercises: true },
     orderBy: { startedAt: "desc" },
@@ -32,7 +27,7 @@ export default async function AnalyticsPage() {
 
   // Metric B: average exercises per workout (last 30 days)
   const totalWorkouts = recent.length;
-  const totalExercises = recent.reduce((sum: number, r: WorkoutWithExercises) => sum + (r.exercises?.length ?? 0), 0);
+  const totalExercises = recent.reduce((sum: number, r) => sum + (r.exercises?.length ?? 0), 0);
   const avgExercises = totalWorkouts ? totalExercises / totalWorkouts : 0;
 
   return (
