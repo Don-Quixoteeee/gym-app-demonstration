@@ -42,7 +42,7 @@ export default function AIPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/ai/coach', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
