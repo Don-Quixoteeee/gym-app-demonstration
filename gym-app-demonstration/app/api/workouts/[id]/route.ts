@@ -29,7 +29,7 @@ export async function PUT(req: Request, { params }: { params: any }) {
 
   try {
     // Update the workout title and replace exercises simply for the demo.
-    const updated = await prisma.$transaction(async (tx) => {
+    const updated = await prisma.$transaction(async (tx: typeof prisma) => {
       if (title !== undefined) {
         await tx.workout.update({ where: { id }, data: { title } });
       }
