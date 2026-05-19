@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+// import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 // Prevent multiple instances of Prisma Client in development.
